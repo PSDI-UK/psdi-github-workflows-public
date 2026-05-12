@@ -37,7 +37,7 @@ on:
         default: "null"
         type: string
     secrets:
-      GITHUB_TOKEN:
+      github_token:
         description: "GitHub token"
         required: true
       deployment_app_id:
@@ -102,4 +102,4 @@ jobs:
       prod: true
       origin: ${{ inputs.origin }}
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      github_token: ${{ secrets.github_token }}

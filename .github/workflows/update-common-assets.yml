@@ -13,7 +13,7 @@
 #   update-assets:
 #     uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/update-common-assets.yaml@VERSION
 #     secrets:
-#       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#       github_token: ${{ secrets.GITHUB_TOKEN }}
 
 name: Update Common PSDI Assets
 run-name: Update Common Assets
@@ -21,7 +21,7 @@ run-name: Update Common Assets
 on:
   workflow_call:
     secrets:
-      GITHUB_TOKEN:
+      github_token:
         description: "GitHub token"
         required: true
 
@@ -56,7 +56,7 @@ jobs:
         if: steps.check-changes.outputs.has_changes == '1'
         uses: peter-evans/create-pull-request@v8
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.github_token }}
           branch: auto-update-assets
           commit-message: "Automated update of PSDI common assets"
           title: "Automated update of PSDI common assets"

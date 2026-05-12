@@ -15,7 +15,7 @@
 #       make_coverage_badge: true
 #       gist_id: GIST_ID
 #     secrets:
-#       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#       github_token: ${{ secrets.GITHUB_TOKEN }}
 #       COVERAGE_GIST_TOKEN: ${{ secrets.COVERAGE_GIST_TOKEN }}
 
 name: Test All
@@ -70,7 +70,7 @@ jobs:
       - name: Test with pytest and report coverage
         id: total
         run: |
-          export GH_TOKEN=${{ secrets.GITHUB_TOKEN }}
+          export GH_TOKEN=${{ secrets.github_token }}
           coverage run -m pytest tests
           # Save coverage report to coverage.json
           coverage json
