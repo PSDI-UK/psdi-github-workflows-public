@@ -1,7 +1,3 @@
-# Reusable workflow intended to be called as a job by other workflows
-
-# This action does the following:
-#
 # Build and push a container image
 
 # Sample workflow content to call this:
