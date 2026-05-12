@@ -1,5 +1,7 @@
 # This workflow will check for any updates to common PSDI assets. It's recommended to run this on a periodic schedule
-# such as once a week:
+# such as once a week.
+
+# Sample workflow content to call this:
 #
 # on:
 #   workflow_dispatch:

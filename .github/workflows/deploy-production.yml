@@ -1,0 +1,77 @@
+# Workflow for manually triggering deployment of latest release version to the production environment
+#
+# It is intended that this workflow be manually triggered after the 'ci-release.yml' job has been shown
+# to successfully deploy the latest release version to the staging cluster.
+#
+# To be more specific, this workflow deploys the container in the GitHub Container Registry namespace for this
+# repo whose tag corresponds to the highest version number, while only considering tags of the form 'v*.*.*',
+# where '*' signify non-negative integers.
+
+# Sample workflow content to call this:
+#
+# on:
+#   workflow_dispatch:
+#
+# jobs:
+#   deploy-production:
+#     uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/deploy-production.yaml@VERSION
+#     secrets:
+#       deployment_app_id: ${{ secrets.DEPLOYMENT_APP_ID }}
+#       deployment_app_private_key: ${{ secrets.DEPLOYMENT_APP_PRIVATE_KEY }}
+
+name: Deploy to production cluster
+run-name: Deploy to production cluster
+on:
+  workflow_call:
+
+jobs:
+  check-branch:
+    # Check that this job is being run on the release branch
+    name: Check this is release branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branch (success)
+        if: github.ref == 'refs/heads/release'
+        run: echo "Success - this is being run on the 'release' branch"
+      - name: Check branch (failure)
+        if: github.ref != 'refs/heads/release'
+        run: |
+          echo "ERROR: This workflow can only be run on the 'release' branch"
+          false # Command that always fails, to signal the job to fail
+
+  get-latest-release-tag:
+    # run on our self hosted github runners enabling access to STFC infrastructure
+    name: Get latest release tag
+    runs-on: ubuntu-latest
+    needs: check-branch
+    outputs:
+      tag: ${{ steps.get-tag.outputs.TARGET_TAG }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Get latest tag in the relase branch
+        id: get-tag
+        run: |
+          TARGET_TAG=$(git tag --sort -version:refname | head -n 1)
+          echo "TARGET_TAG=$TARGET_TAG" >> "$GITHUB_OUTPUT"
+          echo "Highest version tag found to be = $TARGET_TAG"
+
+  deploy-stfc-production-k8s:
+    needs: get-latest-release-tag
+    uses: .github/workflows/deploy-external.yaml
+    with:
+      container_tag: ${{ needs.get-latest-release-tag.outputs.tag }}
+      environment: production
+    secrets:
+      deployment_app_id: ${{ secrets.DEPLOYMENT_APP_ID }}
+      deployment_app_private_key: ${{ secrets.DEPLOYMENT_APP_PRIVATE_KEY }}
+
+  # Run a simple test on prod to ensure nothing is broken
+  test-prod:
+    name: Test deployment was successful
+    needs: deploy-stfc-production-k8s
+    uses: ./.github/workflows/test-gui.yml
+    with:
+      simple: true
+      prod: true
