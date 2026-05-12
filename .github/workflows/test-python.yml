@@ -5,9 +5,9 @@
 # on:
 #   workflow_dispatch:
 #   push:
-#     branches: ["main"]
+#     branches: ["feature**"]
 #
-# jobs:#
+# jobs:
 #   test-python:
 #     uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/test-python.yml@VERSION
 #     with:

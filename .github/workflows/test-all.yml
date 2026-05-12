@@ -1,0 +1,135 @@
+# Runs automated tests on the backend and frontend code and reports coverage
+
+# Sample workflow content to call this:
+#
+# on:
+#   workflow_dispatch:
+#   push:
+#     branches: ["main"]
+#
+# jobs:
+#   test-all:
+#     uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/test-all.yml@VERSION
+#     with:
+#       source_dir: PROJECT_NAME
+#       make_coverage_badge: true
+#       gist_id: GIST_ID
+#     secrets:
+#       COVERAGE_GIST_TOKEN: ${{ secrets.COVERAGE_GIST_TOKEN }}
+
+name: Test All
+run-name: Test All
+
+on:
+  workflow_call:
+    inputs:
+      source_dir:
+        description: "The directory within the project containing the Python source code"
+        required: true
+        type: string
+      make_coverage_badge:
+        description: "Whether or not to generate and upload a coverage badge"
+        required: false
+        default: false
+        type: boolean
+      gist_id:
+        description: "If make_coverage_badge=true, the ID of the Gist to publish the badge to. Unused if make_coverage_badge=false"
+        required: false
+        default: ""
+        type: string
+    secrets:
+      COVERAGE_GIST_TOKEN:
+        description: "Token for the gist app used to publish coverage"
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Set up Firefox
+        uses: browser-actions/setup-firefox@v1
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8
+          pip install .[gui-test]
+
+      - name: Test with pytest and report coverage
+        id: total
+        run: |
+          export GH_TOKEN=${{ github.token }}
+          coverage run -m pytest tests
+          # Save coverage report to coverage.json
+          coverage json
+          # Report coverage to the shell
+          coverage report
+
+      - name: "Upload coverage data"
+        uses: actions/upload-artifact@v7
+        with:
+          name: covdata
+          path: coverage.json
+
+      - name: Lint with flake8
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 tests ${{ inputs.source_dir }} --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings
+          flake8 tests ${{ inputs.source_dir }} --count --exit-zero --max-complexity=10 --max-line-length=120 --statistics
+
+      - name: Test building the package
+        run: |
+          pip install build
+          python -m build
+
+  coverage:
+    name: Report Coverage
+    needs: tests
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: "actions/checkout@v6"
+
+      - name: Set up Python
+        uses: "actions/setup-python@v6"
+        with:
+          python-version: "3.12"
+
+      - name: Download coverage data
+        uses: actions/download-artifact@v8
+        with:
+          name: covdata
+
+      - name: Get total coverage
+        id: total
+        run: |
+          export TOTAL=$(python -c "import json;print(json.load(open('coverage.json'))['totals']['percent_covered_display'])")
+          echo "total=$TOTAL" >> $GITHUB_OUTPUT
+          echo "### Total coverage: ${TOTAL}%" >> $GITHUB_STEP_SUMMARY
+
+      - name: Make coverage badge
+        # See the tutorial at https://nedbatchelder.com/blog/202209/making_a_coverage_badge.html
+        if: ${{ inputs.make_coverage_badge }}
+        uses: schneegans/dynamic-badges-action@v1.8.0
+        with:
+          auth: ${{ secrets.COVERAGE_GIST_TOKEN }}
+          gistID: ${{ inputs.gist_id }}
+          filename: covbadge.json
+          label: Coverage
+          message: ${{ steps.total.outputs.total }}%
+          minColorRange: 50
+          maxColorRange: 90
+          valColorRange: ${{ steps.total.outputs.total }}
