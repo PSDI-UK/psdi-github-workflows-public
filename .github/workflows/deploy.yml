@@ -1,11 +1,4 @@
-# Workflow for manually triggering deployment of latest release version to the production environment
-#
-# It is intended that this workflow be manually triggered after the 'ci-release.yml' job has been shown
-# to successfully deploy the latest release version to the staging cluster.
-#
-# To be more specific, this workflow deploys the container in the GitHub Container Registry namespace for this
-# repo whose tag corresponds to the highest version number, while only considering tags of the form 'v*.*.*',
-# where '*' signify non-negative integers.
+# Deploy the project to the desired target
 
 # Sample workflow content to call this:
 #
@@ -13,16 +6,42 @@
 #   workflow_dispatch:
 #
 # jobs:
-#   deploy-production:
-#     uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/deploy-production.yaml@VERSION
+#   deploy:
+#     uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/deploy.yaml@VERSION
 #     secrets:
 #       deployment_app_id: ${{ secrets.DEPLOYMENT_APP_ID }}
 #       deployment_app_private_key: ${{ secrets.DEPLOYMENT_APP_PRIVATE_KEY }}
 
-name: Deploy to production cluster
-run-name: Deploy to production cluster
+name: Deploy to STFC cluster
+run-name: Deploy to STFC cluster
 on:
   workflow_call:
+    inputs:
+      environment:
+        description: "The deployment environment (dev, staging, production)"
+        required: false
+        default: "dev"
+        type: string
+      prod:
+        description: "If true, will run test on the deployed site instead of local"
+        required: false
+        default: false
+        type: boolean
+      origin:
+        description: "If prod=true, the address of the deployed site to test on (unused if prod=false)"
+        required: false
+        default: "null"
+        type: string
+    secrets:
+      GITHUB_TOKEN:
+        description: "GitHub token"
+        required: true
+      deployment_app_id:
+        description: "ID of GitHub app used for authentication"
+        required: true
+      deployment_app_private_key:
+        description: "Private key of GitHub app used for authentication"
+        required: true
 
 jobs:
   check-branch:
@@ -57,21 +76,25 @@ jobs:
           echo "TARGET_TAG=$TARGET_TAG" >> "$GITHUB_OUTPUT"
           echo "Highest version tag found to be = $TARGET_TAG"
 
-  deploy-stfc-production-k8s:
+  deploy-stfc-k8s:
     needs: get-latest-release-tag
-    uses: .github/workflows/deploy-external.yaml
+    uses: ./.github/workflows/trigger-deployment.yml
     with:
+      environment: ${{ inputs.environment }}
       container_tag: ${{ needs.get-latest-release-tag.outputs.tag }}
-      environment: production
     secrets:
       deployment_app_id: ${{ secrets.DEPLOYMENT_APP_ID }}
       deployment_app_private_key: ${{ secrets.DEPLOYMENT_APP_PRIVATE_KEY }}
 
   # Run a simple test on prod to ensure nothing is broken
   test-prod:
+    if: ${{ inputs.prod }}
     name: Test deployment was successful
-    needs: deploy-stfc-production-k8s
+    needs: deploy-stfc-k8s
     uses: ./.github/workflows/test-gui.yml
     with:
       simple: true
       prod: true
+      origin: ${{ inputs.origin }}
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
