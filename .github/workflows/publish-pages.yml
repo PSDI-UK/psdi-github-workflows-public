@@ -5,7 +5,7 @@
 # on:
 #   workflow_dispatch:
 #   push:
-#     branches: ["feature**"]
+#     branches: ["main"]
 #
 # jobs:
 #   (tests)
@@ -14,7 +14,7 @@
 #     uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/publish-pages.yml@VERSION
 #     with:
 #       environment: github-pages
-#       render-command: PROJECT_NAME_HYPHEN-render --service-mode
+#       render_command: PROJECT_NAME_HYPHEN-render --service-mode
 
 name: Deploy static content to Pages
 run-name: Deploy Pages
