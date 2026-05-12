@@ -6,6 +6,10 @@ run-name: trigger-deployment
 on:
   workflow_call:
     inputs:
+      deployment_repo:
+        description: "The name of the repo used for deployment of this repo"
+        required: true
+        type: string
       environment:
         description: "Environment to deploy to (development, staging or production)"
         required: true
@@ -33,14 +37,14 @@ jobs:
           app-id: ${{ secrets.deployment_app_id }}
           private-key: ${{ secrets.deployment_app_private_key }}
           owner: ${{ github.repository_owner }}
-          repositories: "psdi-variability-plot-deployment"
+          repositories: ${{ inputs.deployment_repo }}
 
       - name: Trigger deployment workflow
         id: trigger
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
-          gh api /repos/PSDI-UK/psdi-variability-plot-deployment/dispatches \
+          gh api /repos/PSDI-UK/${{ inputs.deployment_repo }}/dispatches \
             --method POST \
             --field event_type=deploy \
             --field client_payload[tag]=${{ inputs.container_tag }} \
@@ -62,7 +66,7 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           TRIGGER_TIME: ${{ steps.trigger.outputs.trigger_time }}
-          DEPLOY_REPO: "PSDI-UK/psdi-variability-plot-deployment"
+          DEPLOY_REPO: "PSDI-UK/${{ inputs.deployment_repo }}"
           WORKFLOW_FILE: "ci-deploy.yml"
         run: |
           TIMEOUT=1800  # 30 minutes timeout

@@ -17,6 +17,10 @@ run-name: Deploy to STFC cluster
 on:
   workflow_call:
     inputs:
+      deployment_repo:
+        description: "The name of the repo used for deployment of this repo"
+        required: true
+        type: string
       environment:
         description: "The deployment environment (dev, staging, production)"
         required: false
@@ -80,6 +84,7 @@ jobs:
     needs: get-latest-release-tag
     uses: ./.github/workflows/trigger-deployment.yml
     with:
+      deployment_repo: ${{ inputs.deployment_repo }}
       environment: ${{ inputs.environment }}
       container_tag: ${{ needs.get-latest-release-tag.outputs.tag }}
     secrets:
