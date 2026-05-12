@@ -15,7 +15,7 @@
 #     with:
 #       target: main
 #     secrets:
-#       github_token: ${{ secrets.GITHUB_TOKEN }}
+#       token: ${{ secrets.GITHUB_TOKEN }}
 
 name: Open Pull Request
 run-name: Open PR
@@ -33,7 +33,7 @@ on:
         default: "-d"
         type: string
     secrets:
-      github_token:
+      token:
         description: "GitHub token"
         required: true
 
@@ -60,6 +60,6 @@ jobs:
           fi
           echo "pr_created=$SUCCESS" >> $GITHUB_OUTPUT
         env:
-          github_token: ${{ secrets.github_token }}
+          token: ${{ secrets.token }}
     outputs:
       pr_created: ${{ steps.create-pr.outputs.pr_created }}

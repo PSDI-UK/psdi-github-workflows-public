@@ -16,7 +16,7 @@
 #       container_tag: ${{ github.sha }}
 #       rel_url_path: /RELATIVE_PATH
 #     secrets:
-#       github_token: ${{ secrets.GITHUB_TOKEN }}
+#       token: ${{ secrets.GITHUB_TOKEN }}
 
 name: Tag and push container
 run-name: Tag and push container
@@ -63,7 +63,7 @@ jobs:
           EOF
         env: # needed to authenticate to github and download the repo
           GIT_USERNAME: ${{ github.actor }}
-          GIT_PASSWORD: ${{ secrets.github_token }}
+          GIT_PASSWORD: ${{ secrets.token }}
       - name: Docker build API
         env:
           IMAGE_NAME: "ghcr.io/psdi-uk/${{ inputs.service_name }}/${{ inputs.service_name }}:${{ inputs.container_tag }}"

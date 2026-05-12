@@ -29,7 +29,7 @@
 #     prod: true
 #     origin: https://SITE_NAME.psdi.ac.uk
 #     secrets:
-#       github_token: ${{ secrets.GITHUB_TOKEN }}
+#       token: ${{ secrets.GITHUB_TOKEN }}
 
 name: Test GUI
 run-name: Test GUI
@@ -53,7 +53,7 @@ on:
         default: "null"
         type: string
     secrets:
-      github_token:
+      token:
         description: "GitHub token"
         required: true
 
@@ -82,7 +82,7 @@ jobs:
           if ${{ inputs.prod }}; then
             export ORIGIN=${{ inputs.origin }}
           fi
-          export GH_TOKEN=${{ secrets.github_token }}
+          export GH_TOKEN=${{ secrets.token }}
           pytest tests/gui
       - name: Run simple GUI test
         if: ${{ inputs.simple }}
@@ -90,5 +90,5 @@ jobs:
           if ${{ inputs.prod }}; then
             export ORIGIN=${{ inputs.origin }}
           fi
-          export GH_TOKEN=${{ secrets.github_token }}
+          export GH_TOKEN=${{ secrets.token }}
           pytest 'tests/gui/gui_test.py::test_initial_frontpage'
