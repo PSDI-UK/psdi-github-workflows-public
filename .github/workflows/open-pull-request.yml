@@ -14,6 +14,8 @@
 #     uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/open-pull-request.yml@VERSION
 #     with:
 #       target: main
+#     secrets:
+#       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 name: Open Pull Request
 run-name: Open PR
@@ -30,6 +32,10 @@ on:
         required: false
         default: "-d"
         type: string
+    secrets:
+      GITHUB_TOKEN:
+        description: "GitHub token"
+        required: true
 
 env:
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }}

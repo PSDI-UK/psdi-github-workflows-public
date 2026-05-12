@@ -25,6 +25,8 @@
 #
 #   tag:
 #     uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/job-tag.yml@VERSION
+#     secrets:
+#       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 name: Tag
 run-name: Tag
@@ -35,6 +37,10 @@ on:
       container_tag:
         description: "Container Tag"
         value: ${{ jobs.tag.outputs.container_tag }}
+    secrets:
+      GITHUB_TOKEN:
+        description: "GitHub token"
+        required: true
 
 jobs:
   tag:

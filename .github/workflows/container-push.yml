@@ -7,13 +7,16 @@
 #   push:
 #     branches: ["main"]
 #
-#  container-push:
-#    name: Run a security scan of the repository
-#    uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/container-push.yml@VERSION
-#    with:
-#      service_name: SERVICE_NAME
-#      container_tag: ${{ github.sha }}
-#      rel_url_path: /RELATIVE_PATH
+# jobs:
+#   container-push:
+#     name: Run a security scan of the repository
+#     uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/container-push.yml@VERSION
+#     with:
+#       service_name: SERVICE_NAME
+#       container_tag: ${{ github.sha }}
+#       rel_url_path: /RELATIVE_PATH
+#     secrets:
+#       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 name: Tag and push container
 run-name: Tag and push container
@@ -34,6 +37,10 @@ on:
         required: false
         default: ""
         type: string
+    secrets:
+      GITHUB_TOKEN:
+        description: "GitHub token"
+        required: true
 
 jobs:
   container-push:

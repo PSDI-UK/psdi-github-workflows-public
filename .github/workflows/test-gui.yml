@@ -12,22 +12,24 @@
 #       - "tests/**"
 #       - "pyproject.toml"
 #
-#  test-gui-local:
-#    name: Run full tests of the gui locally
-#    uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/test-gui.yml@VERSION
-#    with:
-#      simple: false
-#      prod: false
+# test-gui-local:
+#   name: Run full tests of the gui locally
+#   uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/test-gui.yml@VERSION
+#   with:
+#     simple: false
+#     prod: false
 #
-#  (deploy)
+# (deploy)
 #
-#  test-gui-remote:
-#    name: Run a simple test of the gui at the deployed location
-#    uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/test-gui.yml@VERSION
-#    with:
-#      simple: true
-#      prod: true
-#      origin: https://SITE_NAME.psdi.ac.uk
+# test-gui-remote:
+#   name: Run a simple test of the gui at the deployed location
+#   uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/test-gui.yml@VERSION
+#   with:
+#     simple: true
+#     prod: true
+#     origin: https://SITE_NAME.psdi.ac.uk
+#     secrets:
+#       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 name: Test GUI
 run-name: Test GUI
@@ -50,6 +52,10 @@ on:
         required: false
         default: "null"
         type: string
+    secrets:
+      GITHUB_TOKEN:
+        description: "GitHub token"
+        required: true
 
 permissions:
   contents: read
@@ -76,7 +82,7 @@ jobs:
           if ${{ inputs.prod }}; then
             export ORIGIN=${{ inputs.origin }}
           fi
-          export GH_TOKEN=${{ github.token }}
+          export GH_TOKEN=${{ secrets.GITHUB_TOKEN }}
           pytest tests/gui
       - name: Run simple GUI test
         if: ${{ inputs.simple }}
@@ -84,5 +90,5 @@ jobs:
           if ${{ inputs.prod }}; then
             export ORIGIN=${{ inputs.origin }}
           fi
-          export GH_TOKEN=${{ github.token }}
+          export GH_TOKEN=${{ secrets.GITHUB_TOKEN }}
           pytest 'tests/gui/gui_test.py::test_initial_frontpage'
