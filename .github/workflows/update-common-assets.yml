@@ -8,8 +8,8 @@
 #   - cron: "00 0 * * mon"
 #
 # jobs:
-# update-assets:
-#   uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/update-common-assets.yaml
+#   update-assets:
+#     uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/update-common-assets.yaml@VERSION
 
 name: Update Common PSDI Assets
 run-name: Update Common Assets
