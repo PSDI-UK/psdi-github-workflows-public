@@ -3,7 +3,7 @@
 # Sample workflow content to call this:
 #
 # on:
-#   workflow_dispatch:=
+#   workflow_dispatch:
 #   push:
 #     branches: ["main"]
 #     paths:
@@ -14,7 +14,7 @@
 #
 #  test-gui-local:
 #    name: Run full tests of the gui locally
-#    uses: ./.github/workflows/test-gui.yml
+#    uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/test-gui.yml@VERSION
 #    with:
 #      simple: false
 #      prod: false
@@ -23,7 +23,7 @@
 #
 #  test-gui-remote:
 #    name: Run a simple test of the gui at the deployed location
-#    uses: ./.github/workflows/test-gui.yml
+#    uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/test-gui.yml@VERSION
 #    with:
 #      simple: true
 #      prod: true
