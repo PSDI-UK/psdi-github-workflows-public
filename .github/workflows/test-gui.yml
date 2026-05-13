@@ -12,24 +12,25 @@
 #       - "tests/**"
 #       - "pyproject.toml"
 #
-# test-gui-local:
-#   name: Run full tests of the gui locally
-#   uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/test-gui.yml@VERSION
-#   with:
-#     simple: false
-#     prod: false
+# jobs:
+#   test-gui-local:
+#     name: Run full tests of the gui locally
+#     uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/test-gui.yml@VERSION
+#     with:
+#       simple: false
+#       prod: false
 #
-# (deploy)
+#   (deploy)
 #
-# test-gui-remote:
-#   name: Run a simple test of the gui at the deployed location
-#   uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/test-gui.yml@VERSION
-#   with:
-#     simple: true
-#     prod: true
-#     origin: https://SITE_NAME.psdi.ac.uk
-#     secrets:
-#       token: ${{ secrets.GITHUB_TOKEN }}
+#   test-gui-remote:
+#     name: Run a simple test of the gui at the deployed location
+#     uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/test-gui.yml@VERSION
+#     with:
+#       simple: true
+#       prod: true
+#       origin: https://SITE_NAME.psdi.ac.uk
+#       secrets:
+#         token: ${{ secrets.GITHUB_TOKEN }}
 
 name: Test GUI
 run-name: Test GUI

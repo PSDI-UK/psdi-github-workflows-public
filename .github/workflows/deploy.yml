@@ -8,6 +8,12 @@
 # jobs:
 #   deploy:
 #     uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/deploy.yaml@VERSION
+#     with:
+#       deployment_repo: DEPLOYMENT_REPO_NAME
+#       deployment_ref: DEPLOYMENT_REPO_REF
+#       environment: production
+#       prod: true
+#       origin: https://SITE_NAME.psdi.ac.uk
 #     secrets:
 #       deployment_app_id: ${{ secrets.DEPLOYMENT_APP_ID }}
 #       deployment_app_private_key: ${{ secrets.DEPLOYMENT_APP_PRIVATE_KEY }}
