@@ -24,7 +24,7 @@
 #   (tests)
 #
 #   tag:
-#     uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/job-tag.yml@VERSION
+#     uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/tag.yml@VERSION
 #     secrets:
 #       token: ${{ secrets.GITHUB_TOKEN }}
 
