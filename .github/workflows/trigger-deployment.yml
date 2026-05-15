@@ -10,10 +10,6 @@ on:
         description: "The name of the repo used for deployment of this repo"
         required: true
         type: string
-      deployment_ref:
-        description: "The ref of the deployment repo to be used"
-        required: true
-        type: string
       environment:
         description: "Environment to deploy to (development, staging or production)"
         required: true
@@ -52,13 +48,13 @@ jobs:
             --method POST \
             --field event_type=deploy \
             --field client_payload[tag]=${{ inputs.container_tag }} \
-            --field client_payload[ref]=${{ inputs.deployment_ref }} \
-            --field client_payload[repo]=${{ inputs.deployment_repo }} \
+            --field client_payload[ref]=${{ github.ref }} \
+            --field client_payload[repo]=${{ github.repository }} \
             --field client_payload[env]=${{ inputs.environment }}
 
           echo "✅ Deployment triggered successfully"
           echo "Tag: ${{ inputs.container_tag }}"
-          echo "Ref: ${{ inputs.deployment_ref }}"
+          echo "Ref: ${{ github.ref }}"
           echo "Env: ${{ inputs.environment }}"
 
           # Store trigger time for polling

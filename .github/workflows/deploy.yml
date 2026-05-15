@@ -11,7 +11,6 @@
 #     with:
 #       container_tag: ${{ github.sha }}
 #       deployment_repo: DEPLOYMENT_REPO_NAME
-#       deployment_ref: DEPLOYMENT_REPO_REF
 #       environment: development
 #     secrets:
 #       token: ${{ secrets.GITHUB_TOKEN }}
@@ -22,7 +21,6 @@
 #     uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/deploy.yml@VERSION
 #     with:
 #       deployment_repo: DEPLOYMENT_REPO_NAME
-#       deployment_ref: DEPLOYMENT_REPO_REF
 #       environment: production
 #       prod: true
 #       origin: https://SITE_NAME.psdi.ac.uk
@@ -43,10 +41,6 @@ on:
         type: string
       deployment_repo:
         description: "The name of the repo used for deployment of this repo"
-        required: true
-        type: string
-      deployment_ref:
-        description: "The ref of the deployment repo to be used"
         required: true
         type: string
       environment:
@@ -116,7 +110,6 @@ jobs:
     uses: ./.github/workflows/trigger-deployment.yml
     with:
       deployment_repo: ${{ inputs.deployment_repo }}
-      deployment_ref: ${{ inputs.deployment_ref }}
       environment: ${{ inputs.environment }}
       # Use the provided tag if it was given, or else the latest tag
       container_tag: ${{ inputs.container_tag != 'null' && inputs.container_tag || needs.get-latest-release-tag.outputs.tag }}
