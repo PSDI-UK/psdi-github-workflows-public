@@ -16,7 +16,7 @@
 #       gist_id: GIST_ID
 #     secrets:
 #       token: ${{ secrets.GITHUB_TOKEN }}
-#       COVERAGE_GIST_TOKEN: ${{ secrets.COVERAGE_GIST_TOKEN }}
+#       gist_token: ${{ secrets.COVERAGE_GIST_TOKEN }}
 
 name: Test All
 run-name: Test All
@@ -39,7 +39,10 @@ on:
         default: ""
         type: string
     secrets:
-      COVERAGE_GIST_TOKEN:
+      token:
+        description: "GitHub token"
+        required: true
+      gist_token:
         description: "Token for the gist app used to publish coverage"
         required: false
 
@@ -126,7 +129,7 @@ jobs:
         if: ${{ inputs.make_coverage_badge }}
         uses: schneegans/dynamic-badges-action@v1.8.0
         with:
-          auth: ${{ secrets.COVERAGE_GIST_TOKEN }}
+          auth: ${{ secrets.gist_token }}
           gistID: ${{ inputs.gist_id }}
           filename: covbadge.json
           label: Coverage
