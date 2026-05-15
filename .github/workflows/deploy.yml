@@ -7,7 +7,7 @@
 #
 # jobs:
 #   deploy:
-#     uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/deploy.yaml@VERSION
+#     uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/deploy.yml@VERSION
 #     with:
 #       deployment_repo: DEPLOYMENT_REPO_NAME
 #       deployment_ref: DEPLOYMENT_REPO_REF
