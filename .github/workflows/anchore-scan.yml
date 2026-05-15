@@ -25,9 +25,6 @@
 #  security_scan:
 #    name: Run a security scan of the repository
 #    uses: PSDI-UK/psdi-github-workflows-public/.github/workflows/anchore-scan.yml@VERSION
-#    with:
-#      simple: false
-#      prod: false
 
 name: Anchore Grype vulnerability scan
 run-name: Anchore Grype vulnerability scan
