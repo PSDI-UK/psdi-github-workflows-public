@@ -19,6 +19,8 @@
 #     with:
 #       simple: false
 #       prod: false
+#     secrets:
+#       token: ${{ secrets.GITHUB_TOKEN }}
 #
 #   (deploy)
 #
@@ -29,8 +31,8 @@
 #       simple: true
 #       prod: true
 #       origin: https://SITE_NAME.psdi.ac.uk
-#       secrets:
-#         token: ${{ secrets.GITHUB_TOKEN }}
+#     secrets:
+#       token: ${{ secrets.GITHUB_TOKEN }}
 
 name: Test GUI
 run-name: Test GUI
