@@ -45,7 +45,9 @@ jobs:
   create-pr:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
       - name: create pull request
         id: create-pr
         # Create the PR, and store an output for whether or not we want to run tests afterward - if this workflow
@@ -62,5 +64,6 @@ jobs:
           echo "pr_created=$SUCCESS" >> $GITHUB_OUTPUT
         env:
           token: ${{ secrets.token }}
+
     outputs:
       pr_created: ${{ steps.create-pr.outputs.pr_created }}

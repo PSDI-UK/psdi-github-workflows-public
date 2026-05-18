@@ -46,9 +46,11 @@ jobs:
   container-push:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout repo
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
+
       - name: Setup docker auth
         run: |
           mkdir -p ~/.docker
@@ -64,6 +66,7 @@ jobs:
         env: # needed to authenticate to github and download the repo
           GIT_USERNAME: ${{ github.actor }}
           GIT_PASSWORD: ${{ secrets.token }}
+
       - name: Docker build API
         env:
           IMAGE_NAME: "ghcr.io/psdi-uk/${{ inputs.service_name }}/${{ inputs.service_name }}:${{ inputs.container_tag }}"

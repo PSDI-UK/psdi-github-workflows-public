@@ -58,6 +58,21 @@ on:
         required: false
         default: "null"
         type: string
+      python_version:
+        description: "The version of Python to use for tests"
+        required: false
+        default: "3.12"
+        type: string
+      require_node:
+        description: "Whether or not to install Node for use with tests (generally not required with the simple test)"
+        required: false
+        default: false
+        type: boolean
+      node_version:
+        description: "If require_node=true, the version of Node to use for tests (unused if require_node=false)"
+        required: false
+        default: "16.x"
+        type: string
     secrets:
       token:
         description: "GitHub token"
@@ -93,9 +108,11 @@ jobs:
     outputs:
       tag: ${{ steps.get-tag.outputs.TARGET_TAG }}
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout repo
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
+
       - name: Get latest tag in the relase branch
         id: get-tag
         run: |
@@ -127,5 +144,8 @@ jobs:
       simple: true
       prod: true
       origin: ${{ inputs.origin }}
+      python_version: ${{ inputs.python_version }}
+      require_node: ${{ inputs.require_node }}
+      node_version: ${{ inputs.node_version }}
     secrets:
       token: ${{ secrets.token }}

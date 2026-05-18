@@ -38,6 +38,21 @@ on:
         required: false
         default: ""
         type: string
+      python_version:
+        description: "The version of Python to use for tests"
+        required: false
+        default: "3.12"
+        type: string
+      require_node:
+        description: "Whether or not to install Node for use with tests"
+        required: false
+        default: false
+        type: boolean
+      node_version:
+        description: "If require_node=true, the version of Node to use for tests (unused if require_node=false)"
+        required: false
+        default: "16.x"
+        type: string
     secrets:
       token:
         description: "GitHub token"
@@ -56,10 +71,15 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v6
 
-      - name: Set up Python 3.12
+      - name: Set up Python ${{ inputs.python_version }}
         uses: actions/setup-python@v6
         with:
-          python-version: "3.12"
+          python-version: ${{ inputs.python_version }}
+
+      - name: Set up Node ${{ inputs.node_version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ inputs.node_version }}
 
       - name: Set up Firefox
         uses: browser-actions/setup-firefox@v1
