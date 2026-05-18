@@ -86,7 +86,7 @@ jobs:
           false # Command that always fails, to signal the job to fail
 
   get-latest-release-tag:
-    if: always() && (inputs.container_tag != 'null' && (needs.check-branch.result == 'skipped' || needs.check-branch.result == 'success'))
+    if: always() && inputs.container_tag == 'null' && (needs.check-branch.result == 'skipped' || needs.check-branch.result == 'success')
     name: Get latest release tag
     runs-on: ubuntu-latest
     needs: check-branch
