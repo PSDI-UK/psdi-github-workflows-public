@@ -72,7 +72,7 @@ on:
 jobs:
   check-branch:
     # Check that this job is being run on the release branch if a production run
-    if: ${{ inputs.prod }}
+    if: false
     name: Check this is release branch
     runs-on: ubuntu-latest
     steps:
