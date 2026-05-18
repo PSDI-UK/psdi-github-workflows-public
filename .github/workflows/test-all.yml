@@ -24,6 +24,11 @@ run-name: Test All
 on:
   workflow_call:
     inputs:
+      python_version:
+        description: "The version of Python to use for tests"
+        required: false
+        default: "3.12"
+        type: string
       source_dir:
         description: "The directory within the project containing the Python source code"
         required: true
@@ -56,10 +61,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v6
 
-      - name: Set up Python 3.12
+      - name: Set up Python ${{ inputs.python_version }}
         uses: actions/setup-python@v6
         with:
-          python-version: "3.12"
+          python-version: ${{ inputs.python_version }}
 
       - name: Set up Firefox
         uses: browser-actions/setup-firefox@v1

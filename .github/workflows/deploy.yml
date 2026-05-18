@@ -34,6 +34,11 @@ run-name: Deploy to STFC cluster
 on:
   workflow_call:
     inputs:
+      python_version:
+        description: "The version of Python to use for pre-deployment tests"
+        required: false
+        default: "3.12"
+        type: string
       container_tag:
         description: "The tag of the container to be deployed. If not provided, will deploy the latest tag"
         required: false
@@ -124,6 +129,7 @@ jobs:
     needs: deploy-stfc-k8s
     uses: ./.github/workflows/test-gui.yml
     with:
+      python_version: ${{ inputs.python_version }}
       simple: true
       prod: true
       origin: ${{ inputs.origin }}
