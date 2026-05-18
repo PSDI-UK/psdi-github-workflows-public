@@ -38,6 +38,7 @@ on:
         required: true
 
 env:
+  GH_TOKEN: ${{ github.token }}
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
 jobs:
