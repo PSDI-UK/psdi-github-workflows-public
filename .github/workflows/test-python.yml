@@ -20,11 +20,6 @@ run-name: Test Python
 on:
   workflow_call:
     inputs:
-      python_version:
-        description: "The version of Python to use for tests"
-        required: false
-        default: "3.12"
-        type: string
       source_dir:
         description: "The directory within the project containing the Python source code"
         required: true
@@ -34,6 +29,21 @@ on:
         required: false
         default: false
         type: boolean
+      python_version:
+        description: "The version of Python to use for tests"
+        required: false
+        default: "3.12"
+        type: string
+      require_node:
+        description: "Whether or not to install Node for use with tests (generally not needed for the backend tests here)"
+        required: false
+        default: false
+        type: boolean
+      node_version:
+        description: "If require_node=true, the version of Node to use for tests (unused if require_node=false)"
+        required: false
+        default: "16.x"
+        type: string
 
 permissions:
   contents: read
@@ -54,6 +64,11 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
+
+      - name: Set up Node ${{ inputs.node_version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ inputs.node_version }}
 
       - name: Set up Python ${{ inputs.python_version }}
         uses: actions/setup-python@v6

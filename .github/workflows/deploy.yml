@@ -34,11 +34,6 @@ run-name: Deploy to STFC cluster
 on:
   workflow_call:
     inputs:
-      python_version:
-        description: "The version of Python to use for pre-deployment tests"
-        required: false
-        default: "3.12"
-        type: string
       container_tag:
         description: "The tag of the container to be deployed. If not provided, will deploy the latest tag"
         required: false
@@ -62,6 +57,21 @@ on:
         description: "If prod=true, the address of the deployed site to test on (unused if prod=false)"
         required: false
         default: "null"
+        type: string
+      python_version:
+        description: "The version of Python to use for tests"
+        required: false
+        default: "3.12"
+        type: string
+      require_node:
+        description: "Whether or not to install Node for use with tests (generally not required with the simple test)"
+        required: false
+        default: false
+        type: boolean
+      node_version:
+        description: "If require_node=true, the version of Node to use for tests (unused if require_node=false)"
+        required: false
+        default: "16.x"
         type: string
     secrets:
       token:
@@ -98,9 +108,11 @@ jobs:
     outputs:
       tag: ${{ steps.get-tag.outputs.TARGET_TAG }}
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout repo
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
+
       - name: Get latest tag in the relase branch
         id: get-tag
         run: |
@@ -129,9 +141,11 @@ jobs:
     needs: deploy-stfc-k8s
     uses: ./.github/workflows/test-gui.yml
     with:
-      python_version: ${{ inputs.python_version }}
       simple: true
       prod: true
       origin: ${{ inputs.origin }}
+      python_version: ${{ inputs.python_version }}
+      require_node: ${{ inputs.require_node }}
+      node_version: ${{ inputs.node_version }}
     secrets:
       token: ${{ secrets.token }}
