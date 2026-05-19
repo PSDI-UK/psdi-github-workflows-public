@@ -53,6 +53,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v6
@@ -65,7 +67,7 @@ jobs:
           pip install .
 
       - name: Render Static Content
-        run: ${{ inputs.render_command }}
+        run: ${{ inputs.render_command }} --dev-mode --service-mode
 
       - name: Setup Pages
         uses: actions/configure-pages@v6
