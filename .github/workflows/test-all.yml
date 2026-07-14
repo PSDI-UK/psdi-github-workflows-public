@@ -147,7 +147,7 @@ jobs:
       - name: Make coverage badge
         # See the tutorial at https://nedbatchelder.com/blog/202209/making_a_coverage_badge.html
         if: ${{ inputs.make_coverage_badge }}
-        uses: schneegans/dynamic-badges-action@v1.8.0
+        uses: schneegans/dynamic-badges-action@v1.9.0
         with:
           auth: ${{ secrets.gist_token }}
           gistID: ${{ inputs.gist_id }}
