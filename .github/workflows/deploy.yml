@@ -53,6 +53,11 @@ on:
         required: false
         default: false
         type: boolean
+      test:
+        description: "If false, will skip running test that the site is properly deployed"
+        required: false
+        default: true
+        type: boolean
       origin:
         description: "If prod=true, the address of the deployed site to test on (unused if prod=false)"
         required: false
@@ -123,7 +128,7 @@ jobs:
   deploy-stfc-k8s:
     needs: get-latest-release-tag
     # Proceed if get-latest-release-tag was successful or skipped
-    if: always() &&  (needs.get-latest-release-tag.result == 'skipped' || needs.get-latest-release-tag.result == 'success')
+    if: always() && (needs.get-latest-release-tag.result == 'skipped' || needs.get-latest-release-tag.result == 'success')
     uses: ./.github/workflows/trigger-deployment.yml
     with:
       deployment_repo: ${{ inputs.deployment_repo }}
@@ -136,7 +141,7 @@ jobs:
 
   # Run a simple test on prod to ensure nothing is broken
   test-prod:
-    if: ${{ inputs.prod }}
+    if: ${{ inputs.prod && inputs.test }}
     name: Test deployment was successful
     needs: deploy-stfc-k8s
     uses: ./.github/workflows/test-gui.yml
