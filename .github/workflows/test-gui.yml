@@ -90,7 +90,7 @@ jobs:
         uses: browser-actions/setup-firefox@v1
 
       - name: Set up Node ${{ inputs.node_version }}
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ inputs.node_version }}
 
